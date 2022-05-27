@@ -12,7 +12,7 @@ import okhttp3.*
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity(), HeroAdapter.Listener {
+class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val URL_HEROINFO = "https://api.opendota.com/api/heroStats"
     private val okHttpClient = OkHttpClient()
@@ -49,9 +49,5 @@ class MainActivity : AppCompatActivity(), HeroAdapter.Listener {
     private fun initRcV() = with(binding){
         rcView.layoutManager = LinearLayoutManager(applicationContext)
         rcView.adapter = HeroAdapter(heroInfo)
-    }
-
-    override fun onClickItem(id: Int) {
-
     }
 }
