@@ -2,41 +2,56 @@ package com.example.dotaheroes
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.dotaheroes.json.DotaItem
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dotaheroes.databinding.ActivityMainBinding
+import com.example.dotaheroes.json.HeroInfo
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity() {
-    private val URL = "https://api.opendota.com/api/heroes"
+class MainActivity : AppCompatActivity(), HeroAdapter.Listener {
+    lateinit var binding: ActivityMainBinding
+    private val URL_HEROINFO = "https://api.opendota.com/api/heroStats"
     private val okHttpClient = OkHttpClient()
+    private var heroInfo = listOf<HeroInfo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        button.setOnClickListener {
-            loadRandomFact()
+        //getHeroItem()
+        getHeroInfo()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        while (heroInfo.isEmpty()) {
+            continue
         }
+        initRcV()
     }
 
-    private fun loadRandomFact() {
+    private fun getHeroInfo() {
         val request = Request.Builder()
-            .url(URL)
+            .url(URL_HEROINFO)
             .build()
         okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val json: String = response.body.string()
                 val moshi = Moshi.Builder().build()
-                val listType = Types.newParameterizedType(List::class.java, DotaItem::class.java)
-                val adapter: JsonAdapter<List<DotaItem>> = moshi.adapter(listType)
-                val heroes = adapter.fromJson(json).toString()
+                val listType = Types.newParameterizedType(List::class.java, HeroInfo::class.java)
+                val adapter: JsonAdapter<List<HeroInfo>> = moshi.adapter(listType)
+                heroInfo = adapter.fromJson(json)!!
             }
             override fun onFailure(call: Call, e: IOException) {
             }
         })
+    }
+    private fun initRcV() = with(binding){
+        rcView.layoutManager = LinearLayoutManager(applicationContext)
+        rcView.adapter = HeroAdapter(heroInfo)
+    }
+
+    override fun onClickItem(id: Int) {
+
     }
 }
