@@ -22,7 +22,6 @@ open class MainActivity : AppCompatActivity(), HeroAdapter.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //getHeroItem()
         getHeroInfo()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -55,10 +54,9 @@ open class MainActivity : AppCompatActivity(), HeroAdapter.Listener {
         rcView.adapter = HeroAdapter(this@MainActivity, heroInfo)
     }
 
-    override fun onClickItem(heroInfo: HeroInfo) {
+    override fun onClickItem(heroInfo: List<HeroInfo>, position: Int) {
         val intentHero = Intent(this, HeroInfoActivity::class.java)
-        if (heroInfo.id < 24) intentHero.putExtra("id",heroInfo.id-1)
-        else intentHero.putExtra("id",heroInfo.id-2)
+        intentHero.putExtra("id",position)
         startActivity(intentHero)
     }
 

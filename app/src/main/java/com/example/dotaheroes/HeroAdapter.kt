@@ -8,10 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.dotaheroes.databinding.HeroListBinding
 import com.example.dotaheroes.json.HeroInfo
 
-class HeroAdapter(val listener: Listener, private val names: List<HeroInfo>) :
+class HeroAdapter(private val listener: Listener, private val names: List<HeroInfo>) :
     RecyclerView.Adapter<HeroAdapter.MyViewHolder>() {
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.tvName)
@@ -36,7 +35,7 @@ class HeroAdapter(val listener: Listener, private val names: List<HeroInfo>) :
         holder.name.text = names[position].localized_name
         holder.icon.load(base_URl)
         holder.button.setOnClickListener {
-            listener.onClickItem(names[position])
+            listener.onClickItem(names, position)
         }
     }
 
@@ -44,6 +43,6 @@ class HeroAdapter(val listener: Listener, private val names: List<HeroInfo>) :
         return names.size
     }
     interface Listener{
-        fun onClickItem(heroInfo: HeroInfo)
+        fun onClickItem(heroInfo: List<HeroInfo>, position: Int)
     }
 }
