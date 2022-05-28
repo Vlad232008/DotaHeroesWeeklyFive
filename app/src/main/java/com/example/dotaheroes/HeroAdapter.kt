@@ -3,19 +3,15 @@ package com.example.dotaheroes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.dotaheroes.databinding.HeroListBinding
 import com.example.dotaheroes.json.HeroInfo
 
 class HeroAdapter(private val listener: Listener, private val names: List<HeroInfo>) :
     RecyclerView.Adapter<HeroAdapter.MyViewHolder>() {
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.findViewById(R.id.tvName)
-        val icon: ImageView = itemView.findViewById(R.id.ivIcon)
-        val button: Button = itemView.findViewById(R.id.btnHero)
+        val binding = HeroListBinding.bind(itemView)
         companion object {
             fun create(parent: ViewGroup): MyViewHolder {
                 return MyViewHolder(
@@ -32,9 +28,9 @@ class HeroAdapter(private val listener: Listener, private val names: List<HeroIn
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val base_URl = "https://api.opendota.com${names[position].icon}"
-        holder.name.text = names[position].localized_name
-        holder.icon.load(base_URl)
-        holder.button.setOnClickListener {
+        holder.binding.tvName.text = names[position].localized_name
+        holder.binding.ivIcon.load(base_URl)
+        holder.binding.btnHero.setOnClickListener {
             listener.onClickItem(names, position)
         }
     }

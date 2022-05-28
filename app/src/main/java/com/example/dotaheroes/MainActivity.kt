@@ -2,8 +2,8 @@ package com.example.dotaheroes
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dotaheroes.databinding.ActivityMainBinding
 import com.example.dotaheroes.json.HeroInfo
