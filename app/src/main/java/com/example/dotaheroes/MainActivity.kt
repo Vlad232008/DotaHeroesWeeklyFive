@@ -1,6 +1,8 @@
 package com.example.dotaheroes
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dotaheroes.databinding.ActivityMainBinding
@@ -12,11 +14,11 @@ import okhttp3.*
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity(), HeroAdapter.Listener {
     lateinit var binding: ActivityMainBinding
     private val URL_HEROINFO = "https://api.opendota.com/api/heroStats"
     private val okHttpClient = OkHttpClient()
-    private var heroInfo = listOf<HeroInfo>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +44,25 @@ class MainActivity : AppCompatActivity() {
                 val adapter: JsonAdapter<List<HeroInfo>> = moshi.adapter(listType)
                 heroInfo = adapter.fromJson(json)!!
             }
+
             override fun onFailure(call: Call, e: IOException) {
             }
         })
     }
-    private fun initRcV() = with(binding){
-        rcView.layoutManager = LinearLayoutManager(applicationContext)
-        rcView.adapter = HeroAdapter(heroInfo)
+
+    private fun initRcV() = with(binding) {
+        rcView.layoutManager = LinearLayoutManager(this@MainActivity)
+        rcView.adapter = HeroAdapter(this@MainActivity, heroInfo)
+    }
+
+    override fun onClickItem(heroInfo: HeroInfo) {
+        val intentHero = Intent(this, HeroInfoActivity::class.java)
+        if (heroInfo.id < 24) intentHero.putExtra("id",heroInfo.id-1)
+        else intentHero.putExtra("id",heroInfo.id-2)
+        startActivity(intentHero)
+    }
+
+    companion object{
+        var heroInfo = listOf<HeroInfo>()
     }
 }

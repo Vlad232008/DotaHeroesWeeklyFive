@@ -11,11 +11,12 @@ import coil.load
 import com.example.dotaheroes.databinding.HeroListBinding
 import com.example.dotaheroes.json.HeroInfo
 
-class HeroAdapter(private val names: List<HeroInfo>) :
+class HeroAdapter(val listener: Listener, private val names: List<HeroInfo>) :
     RecyclerView.Adapter<HeroAdapter.MyViewHolder>() {
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.tvName)
         val icon: ImageView = itemView.findViewById(R.id.ivIcon)
+        val button: Button = itemView.findViewById(R.id.btnHero)
         companion object {
             fun create(parent: ViewGroup): MyViewHolder {
                 return MyViewHolder(
@@ -34,9 +35,15 @@ class HeroAdapter(private val names: List<HeroInfo>) :
         val base_URl = "https://api.opendota.com${names[position].icon}"
         holder.name.text = names[position].localized_name
         holder.icon.load(base_URl)
+        holder.button.setOnClickListener {
+            listener.onClickItem(names[position])
+        }
     }
 
     override fun getItemCount(): Int {
         return names.size
+    }
+    interface Listener{
+        fun onClickItem(heroInfo: HeroInfo)
     }
 }
